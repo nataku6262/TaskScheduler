@@ -1,41 +1,80 @@
-# Creating Batch Files
+# Next step is to enter in some validation to restrict waht fields can contain,
+# and to be unable to produce invalid batch files. 
 
-class task_scheduler:
-    #taskName, action, startTime
-##    self.taskName = taskName
-##    self.action = action
-##    self.startTime = startTime
 
-    def __init__(self, schedule):
-            self.schedule = schedule
+import time, os
+from subprocess import Popen
 
-    def weekly(day):
-        day = day[:3]
-        day = day.upper()
-        if day == 'MON' or day == 'TUE' or day == 'WED' or day == \
-            'THU' or day == 'FRI' or day == 'SAT' or day == 'SUN':
-            print ('/SC DAILY /D', day)
-        else:
-            print ('You need to define a day of the week.')
+folder = os.getcwd()
+        
+'''Generates batch file for a daily event that requires
+name of the batch file
+batchfile you want to run
+start time (must be 24hour clock)'''
 
-    def monthly (day):
-        if day <= 31:
-            print ('/SC MONTHLY /D', day)
-        else:
-            print ('There is not more than 31 days in any month')
+def daily(taskName, batchFile, startTime):
+    with open(taskName+'.bat', 'w') as batchfile:
+        
+        output = ('SchTasks /create /SC Daily /TN {0} /TR {1} /ST {2}'.format\
+               (taskName, batchFile, startTime))
+        print (str(output), file=batchfile)
 
-    def schedule(schedule):
-        schedule = schedule.upper()
-        if schedule == 'DAILY':
-            return '/SC DAILY'
-        elif schedule == 'WEEKLY':
-            weekly()
-        elif schedule == 'MONTHLY':
-            monthly()
+    p = Popen(taskName+'.bat', cwd=str(folder))
+    stdout, stderr = p.communicate()
 
-    def create_task():
-        with open('taskschedule.bat', 'w') as file:
-            print ('SchTasks /Create {0} {1} {2} {3} {4}').format(schdule, taskName, action, startTime)
-            
+    os.remove(taskName+'.bat')
+        
 
-task_scheduler('daily')   
+    with open (taskName + ' delete.bat', 'w') as delBatch:
+
+        output = 'SchTasks /Delete /TN {0}'.format(taskName)
+        print (str(output), file=delBatch)
+
+'''Generates batch file for a weekly event that requires
+name of the batch file
+batchfile you want to run
+day (MON,TUE etc)
+start time (must be 24hour clock)'''
+
+
+def weekly(taskName, batchFile, day, startTime):
+    with open (taskName+'.bat', 'w') as batchfile:
+
+        output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                  .format(day, taskName, batchFile, startTime))
+        print (str(output),'\npause', file=batchfile)
+
+    p = Popen(taskName+'.bat', cwd=str(folder))
+    stdout, stderr = p.communicate()
+
+    os.remove(taskName+'.bat')
+
+    with open (taskName + ' delete.bat', 'w') as delBatch:
+
+        output = 'SchTasks /Delete /TN {0}'.format(taskName)
+        print (str(output), file=delBatch)
+
+
+'''Generates batch file for a monthly event that requires
+name of the batch file
+batchfile you want to run
+day (as a number)
+start time (must be 24hour clock)'''
+
+def monthly(taskName, batchFile, month, startTime):
+    with open (taskName+'.bat', 'w') as batchfile:
+
+        output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                  .format(day, taskName, batchfile, startTime))
+        print (str(output), file=batchFile)
+
+    p = Popen(taskName+'.bat', cwd=str(folder))
+    stdout, stderr = p.communicate()
+
+    os.remove(taskName+'.bat')
+
+    with open (taskName + ' delete.bat', 'w') as delBatch:
+
+        output = 'SchTasks /Delete /TN {0}'.format(taskName)
+        print (str(output), file=delBatch)
+
