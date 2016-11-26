@@ -48,6 +48,8 @@ Temporary Items
 
 # Ignore list
 
+weekly_tesy.py
+monthly_test.py
 pyBatch.bat
 .gitignore
 

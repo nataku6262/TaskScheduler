@@ -17,3 +17,15 @@ https://support.microsoft.com/en-us/kb/814596#bookmark-5
 Added in error generation when the time is not provided in 24 hour clock.
 For Daily, Weekly and Monthly Schedule. 
 
+File Existence confirmation & error gen - 02:50 24/11/2016
+
+Added in validation to cofirm that the batch file exists in the defined directory
+and to generate an error if it is absent. 
+
+
+DAY OF WEEK CHECK -- 10:35 26/11/2016
+
+Added in check for day entered in weekly schedule task function
+
+
+NEXT - Monthly day check (1-31) - what does windows do when 31 entered for months with only 30 days?
