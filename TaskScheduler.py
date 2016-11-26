@@ -4,7 +4,8 @@
 from subprocess import Popen
 import time
 import os
-import re, sys
+import re
+import sys
 
 
 folder = os.getcwd()
@@ -36,6 +37,14 @@ def weekday_check(day):
 
     else:
         print(SyntaxError, 'Error with day of the week')
+
+def mth_day(day):
+    mth_variables = list(range(1,32))
+
+    if day in mth_variables:
+        return True
+    else:
+        print (SyntaxError, 'Day entered for the month is not valid.')
 
 
 def daily(taskName, batchFile, startTime):
@@ -125,7 +134,9 @@ def monthly(taskName, batchFile, day, startTime):
 
     file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
 
-    if time == True and file_check == True:
+    day_chk = mth_day(int(day)) # Checks that the day is valid.
+    
+    if time == True and file_check == True and day_chk == True:
         print ('Create Batch File')
 
         with open (taskName+'.bat', 'w') as batchfile:
@@ -137,7 +148,7 @@ def monthly(taskName, batchFile, day, startTime):
         p = Popen(taskName+'.bat', cwd=str(folder))
         stdout, stderr = p.communicate()
 
-        os.remove(taskName+'.bat')
+        #os.remove(taskName+'.bat')
 
         with open (taskName + ' delete.bat', 'w') as delBatch:
 

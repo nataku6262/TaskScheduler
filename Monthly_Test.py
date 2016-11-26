@@ -23,6 +23,16 @@ def file_exists(file):
     else:
         print (FileNotFoundError, ': Batch File does not exist in directory.')
 
+#Check that the day entered is valid for the month
+
+def mth_day(day):
+    mth_variables = list(range(1,32))
+
+    if day in mth_variables:
+        return True
+    else:
+        print (SyntaxError, 'Day entered for the month is not valid.')
+
 def monthly(taskName, batchFile, day, startTime):
 
     '''Generates batch file for a monthly event that requires
@@ -35,7 +45,9 @@ def monthly(taskName, batchFile, day, startTime):
 
     file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
 
-    if time == True and file_check == True:
+    day_chk = mth_day(int(day)) # Checks that the day is valid.
+    
+    if time == True and file_check == True and day_chk == True:
         print ('Create Batch File')
 
         with open (taskName+'.bat', 'w') as batchfile:
@@ -58,4 +70,4 @@ def monthly(taskName, batchFile, day, startTime):
         print (SyntaxError, ': Time must be entered in 24 hour clock.')
 
 
-monthly('Monthly_Test', "C:/Users/Gavin/Documents/GitHub/TaskScheduler/pyBatch.bat", '1', '09:00')
+monthly('Monthly_Test', "C:/Users/Gavin/Documents/GitHub/TaskScheduler/pyBatch.bat", '31', '09:00')
