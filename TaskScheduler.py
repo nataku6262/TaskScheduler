@@ -26,9 +26,9 @@ def file_exists(file):
         return True
     else:
         print (FileNotFoundError, ': Batch File does not exist in directory.')
+ 
 
 # Day of the week check -- used in Weekly only
-
 def weekday_check(day):
     weekdays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
@@ -46,114 +46,115 @@ def mth_day(day):
     else:
         print (SyntaxError, 'Day entered for the month is not valid.')
 
+class Schedule():
 
-def daily(taskName, batchFile, startTime):
+    def daily(taskName, batchFile, startTime):
 
-    '''Generates batch file for a daily event that requires
-    name of the batch file
-    batchfile you want to run
-    start time (must be 24hour clock)'''
+        '''Generates batch file for a daily event that requires
+        name of the batch file
+        batchfile you want to run
+        start time (must be 24hour clock)'''
 
-    time = is_time_format(startTime) # Returns true if startTime is in 24h clock
+        time = is_time_format(startTime) # Returns true if startTime is in 24h clock
 
-    file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
-
-
-    if time == True and file_check == True:
-        print ('Create Batch File')
-
-        with open(taskName+'.bat', 'w') as batchfile:
-
-            output = ('SchTasks /create /SC Daily /TN {0} /TR {1} /ST {2}'.format\
-                   (taskName, batchFile, startTime))
-            print (str(output), file=batchfile)
-
-        p = Popen(taskName+'.bat', cwd=str(folder))
-        stdout, stderr = p.communicate()
-
-        os.remove(taskName+'.bat')
-
-        with open (taskName + ' delete.bat', 'w') as delBatch:
-
-            output = 'SchTasks /Delete /TN {0}'.format(taskName)
-            print (str(output), file=delBatch)
-            
-    elif is_time_format(startTime) == False:
-        print (SyntaxError, ': Time must be entered in 24 hour clock.')        
+        file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
 
 
-def weekly(taskName, batchFile, day, startTime):
+        if time == True and file_check == True:
+            print ('Create Batch File')
 
-    '''Generates batch file for a weekly event that requires
-    name of the batch file
-    batchfile you want to run
-    day (MON,TUE etc)
-    start time (must be 24hour clock)'''
+            with open(taskName+'.bat', 'w') as batchfile:
 
-    day = day.upper()[:3]
+                output = ('SchTasks /create /SC Daily /TN {0} /TR {1} /ST {2}'.format\
+                       (taskName, batchFile, startTime))
+                print (str(output), file=batchfile)
 
-    time = is_time_format(startTime) # Returns true if startTime is in 24h clock
+            p = Popen(taskName+'.bat', cwd=str(folder))
+            stdout, stderr = p.communicate()
 
-    file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
+            os.remove(taskName+'.bat')
 
-    day_check = weekday_check(day)
+            with open (taskName + ' delete.bat', 'w') as delBatch:
 
-    if time == True and file_check == True and day_check == True:
-        print ('Create Batch File')
-
-        with open (taskName+'.bat', 'w') as batchfile:
-
-            output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
-                      .format(day, taskName, batchFile, startTime))
-            print (str(output), file=batchfile)
-
-        p = Popen(taskName+'.bat', cwd=str(folder))
-        stdout, stderr = p.communicate()
-
-        os.remove(taskName+'.bat')
-
-        with open (taskName + ' delete.bat', 'w') as delBatch:
-
-            output = 'SchTasks /Delete /TN {0}'.format(taskName)
-            print (str(output), file=delBatch)
-
-    elif is_time_format(startTime) == False:
-        print (SyntaxError, ': Time must be entered in 24 hour clock.')
+                output = 'SchTasks /Delete /TN {0}'.format(taskName)
+                print (str(output), file=delBatch)
+                
+        elif is_time_format(startTime) == False:
+            print (SyntaxError, ': Time must be entered in 24 hour clock.')        
 
 
+    def weekly(taskName, batchFile, day, startTime):
 
-def monthly(taskName, batchFile, day, startTime):
+        '''Generates batch file for a weekly event that requires
+        name of the batch file
+        batchfile you want to run
+        day (MON,TUE etc)
+        start time (must be 24hour clock)'''
 
-    '''Generates batch file for a monthly event that requires
-    name of the batch file
-    batchfile you want to run
-    day (as a number)
-    start time (must be 24hour clock)'''
+        day = day.upper()[:3]
 
-    time = is_time_format(startTime) # Returns true if startTime is in 24h clock
+        time = is_time_format(startTime) # Returns true if startTime is in 24h clock
 
-    file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
+        file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
 
-    day_chk = mth_day(int(day)) # Checks that the day is valid.
-    
-    if time == True and file_check == True and day_chk == True:
-        print ('Create Batch File')
+        day_check = weekday_check(day)
 
-        with open (taskName+'.bat', 'w') as batchfile:
+        if time == True and file_check == True and day_check == True:
+            print ('Create Batch File')
 
-            output = ('SchTasks /create /SC MONTHLY /D {0} /TN {1} /TR {2} /ST {3}'\
-                      .format(day, taskName, batchFile, startTime))
-            print (str(output),'\npause', file=batchfile)
+            with open (taskName+'.bat', 'w') as batchfile:
 
-        p = Popen(taskName+'.bat', cwd=str(folder))
-        stdout, stderr = p.communicate()
+                output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                          .format(day, taskName, batchFile, startTime))
+                print (str(output), file=batchfile)
 
-        #os.remove(taskName+'.bat')
+            p = Popen(taskName+'.bat', cwd=str(folder))
+            stdout, stderr = p.communicate()
 
-        with open (taskName + ' delete.bat', 'w') as delBatch:
+            os.remove(taskName+'.bat')
 
-            output = 'SchTasks /Delete /TN {0}'.format(taskName)
-            print (str(output), file=delBatch)
+            with open (taskName + ' delete.bat', 'w') as delBatch:
 
-    elif is_time_format(startTime) == False:
-        print (SyntaxError, ': Time must be entered in 24 hour clock.')
+                output = 'SchTasks /Delete /TN {0}'.format(taskName)
+                print (str(output), file=delBatch)
+
+        elif is_time_format(startTime) == False:
+            print (SyntaxError, ': Time must be entered in 24 hour clock.')
+
+
+
+    def monthly(taskName, batchFile, day, startTime):
+
+        '''Generates batch file for a monthly event that requires
+        name of the batch file
+        batchfile you want to run
+        day (as a number)
+        start time (must be 24hour clock)'''
+
+        time = is_time_format(startTime) # Returns true if startTime is in 24h clock
+
+        file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
+
+        day_chk = mth_day(int(day)) # Checks that the day is valid.
+        
+        if time == True and file_check == True and day_chk == True:
+            print ('Create Batch File')
+
+            with open (taskName+'.bat', 'w') as batchfile:
+
+                output = ('SchTasks /create /SC MONTHLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                          .format(day, taskName, batchFile, startTime))
+                print (str(output),'\npause', file=batchfile)
+
+            p = Popen(taskName+'.bat', cwd=str(folder))
+            stdout, stderr = p.communicate()
+
+            #os.remove(taskName+'.bat')
+
+            with open (taskName + ' delete.bat', 'w') as delBatch:
+
+                output = 'SchTasks /Delete /TN {0}'.format(taskName)
+                print (str(output), file=delBatch)
+
+        elif is_time_format(startTime) == False:
+            print (SyntaxError, ': Time must be entered in 24 hour clock.')
