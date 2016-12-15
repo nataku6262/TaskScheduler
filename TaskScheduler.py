@@ -1,5 +1,8 @@
 # Next step is to enter in some validation to restrict waht fields can contain,
-# and to be unable to produce invalid batch files. 
+# and to be unable to produce invalid batch files.
+
+## Version 2.0
+## Addition of data validation checks and error handling. 
 
 from subprocess import Popen
 import time
@@ -26,7 +29,7 @@ def file_exists(file):
         return True
     else:
         print (FileNotFoundError, ': Batch File does not exist in directory.')
- 
+
 
 # Day of the week check -- used in Weekly only
 def weekday_check(day):
@@ -47,6 +50,7 @@ def mth_day(day):
         print (SyntaxError, 'Day entered for the month is not valid.')
 
 class Schedule():
+
 
     def daily(taskName, batchFile, startTime):
 
@@ -149,7 +153,7 @@ class Schedule():
             p = Popen(taskName+'.bat', cwd=str(folder))
             stdout, stderr = p.communicate()
 
-            #os.remove(taskName+'.bat')
+            os.remove(taskName+'.bat')
 
             with open (taskName + ' delete.bat', 'w') as delBatch:
 
