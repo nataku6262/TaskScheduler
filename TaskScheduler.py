@@ -51,13 +51,25 @@ def mth_day(day):
 
 class Schedule():
 
+    '''Creates tasks, requires:
 
-    def daily(taskName, batchFile, startTime):
+    task name
+    batch file locations and filename
+    start time, in 24 hour clock
 
-        '''Generates batch file for a daily event that requires
-        name of the batch file
-        batchfile you want to run
-        start time (must be 24hour clock)'''
+    for Daily (requires no additional parameters), Weekly(requires
+    weekeday name), Monthly(requires day as an interger).'''
+
+
+    def __init__(self, taskName, batchFile, startTime):
+
+        self.taskName = taskName
+        self.batchFile = batchFile
+        self.startTime = startTime
+
+    def daily(self):
+
+        '''Generates batch file for a daily event'''
 
         time = is_time_format(startTime) # Returns true if startTime is in 24h clock
 
@@ -87,13 +99,14 @@ class Schedule():
             print (SyntaxError, ': Time must be entered in 24 hour clock.')        
 
 
-    def weekly(taskName, batchFile, day, startTime):
+    def weekly(self, day):
 
         '''Generates batch file for a weekly event that requires
-        name of the batch file
-        batchfile you want to run
-        day (MON,TUE etc)
-        start time (must be 24hour clock)'''
+        day (MON,TUE etc)'''
+
+        taskName = self.taskName
+        batchFile = self.batchFile
+        startTime = self.startTime
 
         day = day.upper()[:3]
 
@@ -127,13 +140,14 @@ class Schedule():
 
 
 
-    def monthly(taskName, batchFile, day, startTime):
+    def monthly(self, day):
 
         '''Generates batch file for a monthly event that requires
-        name of the batch file
-        batchfile you want to run
-        day (as a number)
-        start time (must be 24hour clock)'''
+        day (as a number)'''
+
+        taskName = self.taskName
+        batchFile = self.batchFile
+        startTime = self.startTime
 
         time = is_time_format(startTime) # Returns true if startTime is in 24h clock
 
