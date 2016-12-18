@@ -1,8 +1,11 @@
-# Next step is to enter in some validation to restrict waht fields can contain,
+# Next step is to enter in some validation to restrict what fields can contain,
 # and to be unable to produce invalid batch files.
 
 ## Version 2.0
-## Addition of data validation checks and error handling. 
+## Addition of data validation checks and error handling.
+
+## Version 3.0
+## Encapsulated all functions into a Class structure.
 
 from subprocess import Popen
 import time
