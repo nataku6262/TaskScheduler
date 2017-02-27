@@ -26,7 +26,7 @@ def is_time_format(s):
 # Check that the batch file is in the user defined folder.
 
 def file_exists(file):
-    folder, file = file.rsplit('/', 1)
+    folder, file = file.rsplit('/' or '\\',1)
     chk_folder = os.listdir(folder)
     if file in chk_folder:
         return True
@@ -61,7 +61,7 @@ class Schedule():
     start time, in 24 hour clock
 
     for Daily (requires no additional parameters), Weekly(requires
-    weekeday name), Monthly(requires day as an interger).'''
+    weekeday name), Monthly(requires day as an integer).'''
 
 
     def __init__(self, taskName, batchFile, startTime):
@@ -74,25 +74,25 @@ class Schedule():
 
         '''Generates batch file for a daily event'''
 
+        #Handle instantiation
+        taskName = self.taskName
+        batchFile = self.batchFile
+        startTime = self.startTime
+
         time = is_time_format(startTime) # Returns true if startTime is in 24h clock
 
         file_check = file_exists(batchFile) # Returns boolean after checking if file exists in directory.
 
 
         if time == True and file_check == True:
-            print ('Create Batch File')
+            print ('Create Batch File')            
 
-            with open(taskName+'.bat', 'w') as batchfile:
+            output = ('SchTasks /create /SC Daily /TN {0} /TR {1} /ST {2}'.format\
+                   (taskName, batchFile, startTime))
+            #Passes to windows console
+            os.system(output)
 
-                output = ('SchTasks /create /SC Daily /TN {0} /TR {1} /ST {2}'.format\
-                       (taskName, batchFile, startTime))
-                print (str(output), file=batchfile)
-
-            p = Popen(taskName+'.bat', cwd=str(folder))
-            stdout, stderr = p.communicate()
-
-            os.remove(taskName+'.bat')
-
+            # Creates batch task to delete the task in the future easily. 
             with open (taskName + ' delete.bat', 'w') as delBatch:
 
                 output = 'SchTasks /Delete /TN {0}'.format(taskName)
@@ -122,17 +122,11 @@ class Schedule():
         if time == True and file_check == True and day_check == True:
             print ('Create Batch File')
 
-            with open (taskName+'.bat', 'w') as batchfile:
+            output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                      .format(day, taskName, batchFile, startTime))
+            os.system(output)
 
-                output = ('SchTasks /create /SC WEEKLY /D {0} /TN {1} /TR {2} /ST {3}'\
-                          .format(day, taskName, batchFile, startTime))
-                print (str(output), file=batchfile)
-
-            p = Popen(taskName+'.bat', cwd=str(folder))
-            stdout, stderr = p.communicate()
-
-            os.remove(taskName+'.bat')
-
+        #Creates file to enable deletion of the task in the future easily. 
             with open (taskName + ' delete.bat', 'w') as delBatch:
 
                 output = 'SchTasks /Delete /TN {0}'.format(taskName)
@@ -161,16 +155,12 @@ class Schedule():
         if time == True and file_check == True and day_chk == True:
             print ('Create Batch File')
 
-            with open (taskName+'.bat', 'w') as batchfile:
+            output = ('SchTasks /create /SC MONTHLY /D {0} /TN {1} /TR {2} /ST {3}'\
+                     .format(day, taskName, batchFile, startTime))
+           
+            os.system(output)
 
-                output = ('SchTasks /create /SC MONTHLY /D {0} /TN {1} /TR {2} /ST {3}'\
-                          .format(day, taskName, batchFile, startTime))
-                print (str(output),'\npause', file=batchfile)
-
-            p = Popen(taskName+'.bat', cwd=str(folder))
-            stdout, stderr = p.communicate()
-
-            os.remove(taskName+'.bat')
+        #Creates btach file to delete the scheduled task at a later date. 
 
             with open (taskName + ' delete.bat', 'w') as delBatch:
 
